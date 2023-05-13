@@ -1,0 +1,63 @@
+version: 2.1
+
+parameters:
+  build:
+    type: boolean
+    default: false
+
+  android:
+    type: boolean
+    default: false
+
+  build_prod:
+    type: boolean
+    default: false
+
+  android_prod:
+    type: boolean
+    default: false
+
+jobs:
+  android-staging-build:
+    working_directory: ~/repo
+
+    docker:
+      - image: cimg/android:2022.09.2-node
+    # resource_class: medium+ # fails on medium+
+
+    steps:
+      - checkout:
+          path: ~/repo
+
+      # - run:
+      #     name: Building Android build
+      #     command: echo "building"
+
+      - run:
+          name: Install Dependencies
+          command: yarn install
+
+      - run:
+          name: build staging version
+          command: ./gradlew assembleStaging
+          working_directory: android
+
+      - store_artifacts:
+          path: android/app/build/outputs/apk/staging
+
+workflows:
+  android-build:
+    when:
+      or:
+        - << pipeline.parameters.build >>
+        - << pipeline.parameters.android >>
+    jobs:
+      - android-staging-build
+
+  ios-build:
+    when:
+      or:
+        - << pipeline.parameters.build >>
+        - << pipeline.parameters.ios >>
+    jobs:
+      - ios-staging-build
