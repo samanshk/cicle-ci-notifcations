@@ -18,7 +18,7 @@ parameters:
     default: false
 
 jobs:
-  android-staging-build:
+  android-debug-build:
     working_directory: ~/repo
 
     docker:
@@ -38,12 +38,12 @@ jobs:
           command: yarn install
 
       - run:
-          name: build staging version
+          name: build debug version
           command: ./gradlew assembleDebug
           working_directory: android
 
       - store_artifacts:
-          path: android/app/build/outputs/apk/staging
+          path: android/app/build/outputs/apk/debug
 
 workflows:
   android-build:
@@ -52,4 +52,4 @@ workflows:
         - << pipeline.parameters.build >>
         - << pipeline.parameters.android >>
     jobs:
-      - android-staging-build
+      - android-debug-build
