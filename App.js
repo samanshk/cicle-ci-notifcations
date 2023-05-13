@@ -6,9 +6,8 @@
  * @flow strict-local
  */
 
-import {Animated, Dimensions, PanResponder} from 'react-native';
-
-import React, {useEffect, useRef, useState} from 'react';
+// import {Animated, Dimensions, PanResponder} from 'react-native';
+// import React, {useEffect, useRef, useState} from 'react';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -166,4 +165,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Appp;
+export default App;
