@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.9.3
+
 parameters:
   build:
     type: boolean
@@ -50,6 +53,15 @@ jobs:
           command: |
             export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
             curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="${CIRCLE_PROJECT_REPONAME} | branch -> ${CIRCLE_BRANCH} | commit -> ${GIT_COMMIT_DESC}"  https://slack.com/api/files.upload
+      
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
+
 
 workflows:
   android-build:
@@ -59,3 +71,6 @@ workflows:
         - << pipeline.parameters.android >>
     jobs:
       - android-debug-build
+          context: slack-secrets
+
+          
