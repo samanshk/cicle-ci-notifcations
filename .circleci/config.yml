@@ -53,11 +53,3 @@ workflows:
         - << pipeline.parameters.android >>
     jobs:
       - android-staging-build
-
-  ios-build:
-    when:
-      or:
-        - << pipeline.parameters.build >>
-        - << pipeline.parameters.ios >>
-    jobs:
-      - ios-staging-build
