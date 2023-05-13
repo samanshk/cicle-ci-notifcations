@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.9.3
+
 parameters:
   build:
     type: boolean
@@ -45,6 +48,15 @@ jobs:
       - store_artifacts:
           path: android/app/build/outputs/apk/debug
 
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
+
+
 workflows:
   android-build:
     when:
@@ -53,3 +65,6 @@ workflows:
         - << pipeline.parameters.android >>
     jobs:
       - android-debug-build
+          context: slack-secrets
+
+          
