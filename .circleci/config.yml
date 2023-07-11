@@ -48,24 +48,6 @@ jobs:
       - store_artifacts:
           path: android/app/build/outputs/apk/debug
 
-      - run:
-          name: Upload to Slack
-          command: |
-            export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
-            curl -F file=@android/app/build/outputs/apk/debug/app-debug.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_ACCESS_TOKEN -F title="${CIRCLE_PROJECT_REPONAME} | branch -> ${CIRCLE_BRANCH} | commit -> ${GIT_COMMIT_DESC}"  https://slack.com/api/files.upload
-
-      # - slack/upload-file:
-      #     channel: C055D0W6885 # Replace with your Slack channel name
-      #     file: android/app/build/outputs/apk/debug/app-debug.apk # Replace with the path to your generated APK file
-      #     filetype: apk
-
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-      - slack/notify:
-          event: pass
-          template: success_tagged_deploy_1
 
 workflows:
   android-build:
